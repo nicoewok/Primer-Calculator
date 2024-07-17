@@ -1,6 +1,7 @@
 using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Globalization;
+using System.Data.SqlTypes;
 
 namespace PrimerCalculator
 {
@@ -42,8 +43,14 @@ namespace PrimerCalculator
                 if (melting < min_temp || melting > max_temp)
                     continue;
 
+
+                //gc percentage >50%
+                float gc_count = this.CalculateGCCount(valid_sequence);
+                if (gc_count < 0.5f)
+                    continue;
+
                 float delta_g = this.CalculateDeltaG(valid_sequence);
-                Primer primer = new Primer(valid_sequence, melting, delta_g);
+                Primer primer = new Primer(valid_sequence, melting, delta_g, gc_count);
                 primer_list.Add(primer);
             }
 
@@ -72,20 +79,35 @@ namespace PrimerCalculator
                 if ((!substring.StartsWith("C") && !substring.StartsWith("G")) || !(substring.EndsWith("C") && !substring.EndsWith("G")))
                     continue;
 
-                //gc percentage >50%
-                float gc_count = 0.0f;
-                for (int j = 0; j < substring.Length; j++)
-                {
-                    if (substring[j] == 'G' || substring[j] == 'C')
-                        gc_count++;
-                }
-                if ((gc_count / length) < 0.5)
+                if (!this.CheckMultipleLetter(substring))
                     continue;
 
                 substrings.Add(substring);
             }
 
             return substrings;
+        }
+
+        //checks if more than 2 times
+        //return true if it is ok, false if more than 2 in a row
+        private bool CheckMultipleLetter(string text)
+        {
+            char last_letter = text[0];
+            int letters_in_row = 0;
+            for (int i = 1; i < text.Length - 1; i++)
+            {
+                if (text[i] == last_letter)
+                {
+                    letters_in_row++;
+                } else {
+                    letters_in_row = 0;
+                    last_letter = text[i];
+                }
+
+                if (letters_in_row >= 2)
+                    return false;
+            }
+            return true;
         }
 
         private float CalculateMeltingTemp(string sequence)
@@ -100,6 +122,20 @@ namespace PrimerCalculator
             return -5.0f;
         }
 
+
+        private float CalculateGCCount(string sequence)
+        {
+            //gc percentage >50%
+            float gc_count = 0.0f;
+            for (int j = 0; j < sequence.Length; j++)
+            {
+                if (sequence[j] == 'G' || sequence[j] == 'C')
+                    gc_count++;
+            }
+            return gc_count / sequence.Length;
+        }
+
+
         private void SavePrimersToCsv(string csv_path, List<Primer> primers)
         {
             
@@ -107,12 +143,12 @@ namespace PrimerCalculator
             using (StreamWriter writer = new StreamWriter(csv_path))
             {
                 //write CSV header
-                writer.WriteLine("melting_temp,delta_g,sequence");
+                writer.WriteLine("melting_temp,delta_g,gc_count,sequence");
 
                 //write primer details
                 foreach (var primer in primers)
                 {
-                    writer.WriteLine($"{primer.melting_temp},{primer.delta_g},{primer.sequence}");
+                    writer.WriteLine($"{primer.melting_temp},{primer.delta_g},{primer.gc_count},{primer.sequence}");
                 }
             }
         }

@@ -1,3 +1,6 @@
-melting_temp,delta_g,sequence
-60,-5,CC
-60,-5,GC
+melting_temp,delta_g,gc_count,sequence
+60,-5,1,CCCC
+60,-5,1,CCCC
+60,-5,1,CCCC
+60,-5,1,CCCC
+60,-5,1,CCCC
