@@ -1,6 +1,8 @@
 melting_temp,delta_g,gc_count,sequence
-60,-5,1,CCCC
-60,-5,1,CCCC
-60,-5,1,CCCC
-60,-5,1,CCCC
-60,-5,1,CCCC
+-53.1,-5.0,1.0,CGCGC
+-53.1,-5.0,1.0,GCGCC
+-53.1,-5.0,1.0,GCCGC
+-53.1,-5.0,1.0,CCGCC
+-53.1,-5.0,1.0,GCCGC
+-53.1,-5.0,1.0,CCGCC
+-53.1,-5.0,1.0,GCCGC

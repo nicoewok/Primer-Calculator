@@ -21,11 +21,12 @@ namespace PrimerCalculator
         private void btn_calculate_Click(object sender, EventArgs e)
         {
             //getting the parameters
-            if (i_primer_length.Text.Length == 0 || i_min_temp.Text.Length == 0 || i_max_temp.Text.Length == 0 || i_DNA.Text.Length == 0) {
+            if (i_primer_length.Text.Length == 0 || i_min_temp.Text.Length == 0 || i_max_temp.Text.Length == 0 || i_DNA.Text.Length == 0)
+            {
                 MessageBox.Show("All input fields are mandatory!", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            string DNA = i_DNA.Text;
+            string DNA = i_DNA.Text.ToUpper();
 
             //parsing ints
             if (!int.TryParse(i_primer_length.Text, out int primer_length) || !double.TryParse(i_min_temp.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double min_temp) || !double.TryParse(i_max_temp.Text, NumberStyles.Any, CultureInfo.InvariantCulture, out double max_temp))
@@ -33,21 +34,23 @@ namespace PrimerCalculator
                 MessageBox.Show("Please enter valid numbers.", "Input Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            
+
             List<string> valid_strings = this.GetValidSubstrings(DNA, primer_length);
             List<Primer> primer_list = new List<Primer>();
 
-            foreach (var valid_sequence in  valid_strings)
+            foreach (var valid_sequence in valid_strings)
             {
-                float melting = this.CalculateMeltingTemp(valid_sequence);
-                if (melting < min_temp || melting > max_temp)
-                    continue;
-
-
                 //gc percentage >50%
                 float gc_count = this.CalculateGCCount(valid_sequence);
                 if (gc_count < 0.5f)
                     continue;
+
+                float melting = this.CalculateMeltingTemp(valid_sequence.Length, gc_count);
+                //if (melting < min_temp || melting > max_temp)
+                //    continue;
+
+
+
 
                 float delta_g = this.CalculateDeltaG(valid_sequence);
                 Primer primer = new Primer(valid_sequence, melting, delta_g, gc_count);
@@ -74,11 +77,12 @@ namespace PrimerCalculator
             for (int i = 0; i <= text.Length - length; i++)
             {
                 string substring = text.Substring(i, length);
-                
+
                 //start/end with G/C
                 if ((!substring.StartsWith("C") && !substring.StartsWith("G")) || !(substring.EndsWith("C") && !substring.EndsWith("G")))
                     continue;
 
+                //check if letter more than 2 times in a row
                 if (!this.CheckMultipleLetter(substring))
                     continue;
 
@@ -92,28 +96,30 @@ namespace PrimerCalculator
         //return true if it is ok, false if more than 2 in a row
         private bool CheckMultipleLetter(string text)
         {
-            char last_letter = text[0];
+            char last_letter = '0';
             int letters_in_row = 0;
-            for (int i = 1; i < text.Length - 1; i++)
+            for (int i = 0; i < text.Length; i++)
             {
                 if (text[i] == last_letter)
                 {
                     letters_in_row++;
                 } else {
-                    letters_in_row = 0;
                     last_letter = text[i];
+                    letters_in_row = 0;
                 }
 
-                if (letters_in_row >= 2)
+                if (letters_in_row == 2)
                     return false;
             }
+           
             return true;
         }
 
-        private float CalculateMeltingTemp(string sequence)
+        private float CalculateMeltingTemp(int length, float gc_count)
         {
             //Placeholder calculation for melting temperature
-            return 60.0f;
+            return 81.5f + (0.41f * gc_count) - (675.0f / (float)length);
+            //return 60f;
         }
 
         private float CalculateDeltaG(string sequence)
@@ -138,7 +144,7 @@ namespace PrimerCalculator
 
         private void SavePrimersToCsv(string csv_path, List<Primer> primers)
         {
-            
+
 
             using (StreamWriter writer = new StreamWriter(csv_path))
             {
@@ -148,9 +154,26 @@ namespace PrimerCalculator
                 //write primer details
                 foreach (var primer in primers)
                 {
-                    writer.WriteLine($"{primer.melting_temp},{primer.delta_g},{primer.gc_count},{primer.sequence}");
+                    string melting = primer.melting_temp.ToString("0.0", CultureInfo.InvariantCulture);
+                    string delta = primer.delta_g.ToString("0.0", CultureInfo.InvariantCulture);
+                    string gc = primer.gc_count.ToString("0.0", CultureInfo.InvariantCulture);
+                    writer.WriteLine($"{melting},{delta},{gc},{primer.sequence}");
                 }
             }
+        }
+
+        private void button1_Click(object sender, EventArgs e)
+        {
+            //test
+            string test1 = "CGCCC";
+            string test2 = "GCGC";
+            string test3 = "TAAAA";
+            string test4 = "TATAAT";
+
+            Console.WriteLine("Should be:\nno\nyes\nno\nyes\nBut is:\n\n");
+
+            string bools = $"{this.CheckMultipleLetter(test1)}\n{this.CheckMultipleLetter(test2)}\n{this.CheckMultipleLetter(test3)}\n{this.CheckMultipleLetter(test4)}";
+            MessageBox.Show($"Should be:\nno\nyes\nno\nyes\nBut is:\n\n{bools}", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
