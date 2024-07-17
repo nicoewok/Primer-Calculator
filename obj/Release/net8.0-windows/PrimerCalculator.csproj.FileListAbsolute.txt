@@ -1,0 +1,16 @@
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\bin\Release\net8.0-windows\PrimerCalculator.exe
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\bin\Release\net8.0-windows\PrimerCalculator.deps.json
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\bin\Release\net8.0-windows\PrimerCalculator.runtimeconfig.json
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\bin\Release\net8.0-windows\PrimerCalculator.dll
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\bin\Release\net8.0-windows\PrimerCalculator.pdb
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.Form1.resources
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.csproj.GenerateResource.cache
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.GeneratedMSBuildEditorConfig.editorconfig
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.AssemblyInfoInputs.cache
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.AssemblyInfo.cs
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.csproj.CoreCompileInputs.cache
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.dll
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\refint\PrimerCalculator.dll
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.pdb
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\PrimerCalculator.genruntimeconfig.cache
+X:\Users\Nico\Dokumente\Csharp\PrimerCalculator\obj\Release\net8.0-windows\ref\PrimerCalculator.dll
