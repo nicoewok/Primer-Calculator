@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("PrimerCalculator")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+8c0ce10619a382849899e3ca85ff334fae80ca76")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+403f62dd57d488ad635e2d0c4084c940a0857a67")]
 [assembly: System.Reflection.AssemblyProductAttribute("PrimerCalculator")]
 [assembly: System.Reflection.AssemblyTitleAttribute("PrimerCalculator")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
