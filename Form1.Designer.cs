@@ -38,6 +38,7 @@
             i_max_temp = new TextBox();
             label5 = new Label();
             i_DNA = new TextBox();
+            button1 = new Button();
             SuspendLayout();
             // 
             // label1
@@ -127,11 +128,22 @@
             i_DNA.Size = new Size(544, 133);
             i_DNA.TabIndex = 9;
             // 
+            // button1
+            // 
+            button1.Location = new Point(453, 373);
+            button1.Name = "button1";
+            button1.Size = new Size(75, 23);
+            button1.TabIndex = 10;
+            button1.Text = "button1";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click_1;
+            // 
             // Form1
             // 
             AutoScaleDimensions = new SizeF(7F, 15F);
             AutoScaleMode = AutoScaleMode.Font;
             ClientSize = new Size(584, 461);
+            Controls.Add(button1);
             Controls.Add(i_DNA);
             Controls.Add(label5);
             Controls.Add(i_max_temp);
@@ -162,5 +174,6 @@
         private TextBox i_max_temp;
         private Label label5;
         private TextBox i_DNA;
+        private Button button1;
     }
 }

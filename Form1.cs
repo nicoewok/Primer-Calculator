@@ -2,6 +2,7 @@ using static System.Net.Mime.MediaTypeNames;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 using System.Globalization;
 using System.Data.SqlTypes;
+using static System.Reflection.Metadata.BlobBuilder;
 
 namespace PrimerCalculator
 {
@@ -45,7 +46,7 @@ namespace PrimerCalculator
                 if (gc_count < 0.5f)
                     continue;
 
-                float melting = this.CalculateMeltingTemp(valid_sequence.Length, gc_count);
+                float melting = this.CalculateMeltingTemp(valid_sequence);
                 //if (melting < min_temp || melting > max_temp)
                 //    continue;
 
@@ -103,7 +104,9 @@ namespace PrimerCalculator
                 if (text[i] == last_letter)
                 {
                     letters_in_row++;
-                } else {
+                }
+                else
+                {
                     last_letter = text[i];
                     letters_in_row = 0;
                 }
@@ -111,21 +114,22 @@ namespace PrimerCalculator
                 if (letters_in_row == 2)
                     return false;
             }
-           
+
             return true;
         }
 
-        private float CalculateMeltingTemp(int length, float gc_count)
+        private float CalculateMeltingTemp(string sequence)
         {
             //Placeholder calculation for melting temperature
-            return 81.5f + (0.41f * gc_count) - (675.0f / (float)length);
+            return this.CalculateDeltaH(sequence)/this.CalculateDeltaS(sequence) - 273.15f;
             //return 60f;
         }
 
         private float CalculateDeltaG(string sequence)
         {
             //Placeholder calculation for delta G
-            return -5.0f;
+            float delta_g = this.CalculateDeltaH(sequence) - 298.15f * this.CalculateDeltaS(sequence); //it's in cal/mol
+            return delta_g/1000;
         }
 
 
@@ -162,18 +166,71 @@ namespace PrimerCalculator
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+
+        private int GetIndexByBase(char b)
         {
-            //test
-            string test1 = "CGCCC";
-            string test2 = "GCGC";
-            string test3 = "TAAAA";
-            string test4 = "TATAAT";
+            switch (b)
+            {
+                case 'A':
+                    return 0;
+                case 'C':
+                    return 1;
+                case 'G':
+                    return 2;
+                case 'T':
+                    return 3;
+                default:
+                    return 4;
+            }
+        }
 
-            Console.WriteLine("Should be:\nno\nyes\nno\nyes\nBut is:\n\n");
+        private float GetEnthalpy(string neighbor)
+        {
+            float[,] enthalphies = { { 9100, 6500, 7800, 8600 }, { 5800, 11000, 11900, 7800 }, { 5600, 11100, 11000, 6500 }, { 6000, 5600, 5800, 9100 } };
+            int i = this.GetIndexByBase(neighbor[0]);
+            int j = this.GetIndexByBase(neighbor[1]);
 
-            string bools = $"{this.CheckMultipleLetter(test1)}\n{this.CheckMultipleLetter(test2)}\n{this.CheckMultipleLetter(test3)}\n{this.CheckMultipleLetter(test4)}";
-            MessageBox.Show($"Should be:\nno\nyes\nno\nyes\nBut is:\n\n{bools}", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            return enthalphies[i, j];
+        }
+
+        private float CalculateDeltaH(string sequence)
+        {
+            float delta_h = 0.0f;
+            for (int i = 0; i <= sequence.Length - 2; i++)
+            {
+                string neighbor = sequence.Substring(i, 2);
+
+                delta_h += this.GetEnthalpy(neighbor);
+            }
+
+            return delta_h;
+        }
+
+        private float GetEntropy(string neighbor)
+        {
+            float[,] entropies = { { 24.0f, 17.3f, 20.8f, 23.9f }, { 12.9f, 26.6f, 27.8f, 20.8f }, { 13.5f, 26.7f, 26.6f, 17.3f }, { 16.9f, 13.5f, 12.9f, 24.0f} };
+            int i = this.GetIndexByBase(neighbor[0]);
+            int j = this.GetIndexByBase(neighbor[1]);
+
+            return entropies[i, j];
+        }
+
+        private float CalculateDeltaS(string sequence)
+        {
+            float delta_s = 15.1f;
+            for (int i = 0; i <= sequence.Length - 2; i++)
+            {
+                string neighbor = sequence.Substring(i, 2);
+
+                delta_s += this.GetEntropy(neighbor);
+            }
+            
+            return delta_s;
+        }
+
+        private void button1_Click_1(object sender, EventArgs e)
+        {
+            MessageBox.Show($"For CG it's {this.GetEnthalpy("CG")}", "Success!", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
