@@ -51,10 +51,10 @@ namespace PrimerCalculator
                 //    continue;
 
 
-
+                int pos = DNA.IndexOf(valid_sequence);
 
                 float delta_g = this.CalculateDeltaG(valid_sequence);
-                Primer primer = new Primer(valid_sequence, melting, delta_g, gc_count);
+                Primer primer = new Primer(pos, valid_sequence, melting, delta_g, gc_count);
                 primer_list.Add(primer);
             }
 
@@ -122,7 +122,6 @@ namespace PrimerCalculator
         {
             //Placeholder calculation for melting temperature
             return this.CalculateDeltaH(sequence)/this.CalculateDeltaS(sequence) - 273.15f;
-            //return 60f;
         }
 
         private float CalculateDeltaG(string sequence)
@@ -153,7 +152,7 @@ namespace PrimerCalculator
             using (StreamWriter writer = new StreamWriter(csv_path))
             {
                 //write CSV header
-                writer.WriteLine("melting_temp,delta_g,gc_count,sequence");
+                writer.WriteLine("position,melting_temp,delta_g,gc_count,sequence");
 
                 //write primer details
                 foreach (var primer in primers)
@@ -161,7 +160,7 @@ namespace PrimerCalculator
                     string melting = primer.melting_temp.ToString("0.0", CultureInfo.InvariantCulture);
                     string delta = primer.delta_g.ToString("0.0", CultureInfo.InvariantCulture);
                     string gc = primer.gc_count.ToString("0.0", CultureInfo.InvariantCulture);
-                    writer.WriteLine($"{melting},{delta},{gc},{primer.sequence}");
+                    writer.WriteLine($"{primer.position},{melting},{delta},{gc},{primer.sequence}");
                 }
             }
         }
